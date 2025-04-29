@@ -31,7 +31,6 @@
 \newtheorem*{notation*}{Notation}
 \newtheorem*{convention*}{Convention}
 
-% \newenvironment{comment}{\begin{quote} \em Comment. }{\end{quote}}
 
 %%%%%%% Relations
 
@@ -42,7 +41,7 @@
 \newcommand{\op}{\mathrm{op}}
 \newcommand{\Nat}{\mathbf{N}}
 % \newcommand{\co}{\colon}
-\newcommand{\st}{\,|\,}
+\newcommand{\suchthat}{\,|\,}
 
 
 %%% Morphisms
@@ -55,11 +54,6 @@
 \newcommand{\counit}{\, \mathsf{counit} \, }
 
 %%%% Objects
-
-\newcommand{\dcatC}{\mathbb{C}}
-\newcommand{\dcatD}{\mathbb{D}}
-\newcommand{\dcatE}{\mathbb{E}}
-\newcommand{\dcatF}{\mathbb{F}}
 
 \newcommand{\catC}{\mathbf{C}}
 \newcommand{\catD}{\mathbf{D}}
@@ -87,41 +81,18 @@
 
 %%%% Syntax
 
-\newcommand{\Type}{\mathsf{Ty}}
+\newcommand{\Type}{\mathsf{Type}}
 \newcommand{\Term}{\mathsf{Tm}}
 \newcommand{\tp}{\mathsf{tp}}
 \newcommand{\disp}[1]{\mathsf{disp}_{#1}}
 \newcommand{\var}{\mathsf{var}}
-\newcommand{\Prop}{\mathsf{Prop}}
-\newcommand{\U}{\mathsf{U}}
-\newcommand{\E}{\mathsf{E}}
-\newcommand{\El}{\mathsf{El}}
-\newcommand{\pair}{\mathsf{pair}}
-\newcommand{\Id}{\mathsf{Id}}
-\newcommand{\refl}{\mathsf{refl}}
-\newcommand{\J}{\mathsf{J}}
-\newcommand{\fst}{\mathsf{fst}}
-\newcommand{\snd}{\mathsf{snd}}
-\newcommand{\ev}[2]{\mathsf{ev}_{#1} \, #2}
-\newcommand{\dom}{\mathsf{dom}}
-\newcommand{\cod}{\mathsf{cod}}
-\newcommand{\Exp}{\mathsf{Exp}}
-\newcommand{\fun}{\mathsf{fun}}
-\newcommand{\name}[1]{\ulcorner #1 \urcorner}
+
 
 \newcommand{\Fib}{\mathsf{Fib}}
 \newcommand{\lift}[2]{\mathsf{lift} \, #1 \, #2}
 \newcommand{\fiber}{\mathsf{fiber}}
 \newcommand{\Interval}{\mathbb{I}}
 \newcommand{\Lift}[2]{\mathsf{L}_{#1}^{#2}}
-
-%%%% Interpretation
-
-\newcommand{\doublesquarelbracket}{[\![}
-\newcommand{\doublesquarerbracket}{]\!]}
-\newcommand{\IntpCtx}[1]{\doublesquarelbracket #1 \doublesquarerbracket}
-\newcommand{\IntpType}[1]{\doublesquarelbracket #1 \doublesquarerbracket}
-\newcommand{\IntpTerm}[1]{\doublesquarelbracket #1 \doublesquarerbracket}
 
 % % Greek
 \newcommand{\al}{\alpha}
@@ -149,7 +120,23 @@
 \newcommand{\append}{\mathbin{^\frown}}
 
 
-% % Misc
-% \newenvironment{bprooftree}
-%   {\leavevmode\hbox\bgroup}
-%   {\DisplayProof\egroup}
+% % Displayed categories
+
+\newcommand{\dcatC}{\mathbb{C}}
+\newcommand{\dcatD}{\mathbb{D}}
+\newcommand{\dcatE}{\mathbb{E}}
+\newcommand{\dcatF}{\mathbb{F}}
+
+\newcommand{\dconst}[2][]{\mathop{\constfont{const}_{#1}}{#2}}
+
+\renewcommand{\hom}{\mathsf{hom}}
+\newcommand{\mor}[2]{\hom(#1,#2)}
+\newcommand{\dmor}[3]{\hom_{#2}({#1},{#3})}
+\newcommand{\dto}[3]{\ensuremath{{#1} \to_{#2} {#3}}}
+\newcommand{\dob}[2]{\ensuremath{{#1}_{#2}}}
+\newcommand{\compose}[2]{\ensuremath{#1}\circ {#2}}
+\newcommand{\depeq}[1][*]{=_{#1}}
+
+\newcommand{\f}{\bar{f}}
+\newcommand{\g}{\bar{g}}
+\newcommand{\h}{\bar{h}}

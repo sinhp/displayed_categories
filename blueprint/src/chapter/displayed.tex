@@ -4,9 +4,35 @@ in the rest of the notes.
 
 \medskip
 
-\begin{definition}[Displayed category]
-  \label{defn:displayed-category}
-  \lean{CategoryTheory.Display} \leanok
-  Given a category $\catC$, a \textbf{displayed category} $\dcatD$ over $\catC$ consists of
 
+\begin{definition}[Displayed Structure]
+      \label{defn:displayed-structure}
+      \lean{CategoryTheory.DisplayStruct} \leanok
+      A \textbf{displayed structure} over a category $\catC$ consists of
+      \begin{itemize}
+            \item A type family $D : \catC \to \Type$ assigning to each object $c : \catC$ a type $D(c)$ of 'objects over $c$';
+            \item For each morphism $f : I \to J$ of $\catC$, and objects $x : D(I)$ and $y : D(J)$, a type of 'morphisms from $x$ to $y$ over $f$',
+                              denoted $\dmor{x}{f}{y}$ or $\dto{x}{f}{y}$;
+            \item For each $c : \catC$ and $x : D(c)$, a morphism $1_x : \dto{x}{1_c}{x}$;
+            \item For all morphisms $f : I \to J$ and $g : J \to K$ in $\catC$ and objects $x : D(I)$ and $y : D(J)$ and $z : D(K)$,
+                              a function
+                              $$\dmor{x}{f}{y} \to \dmor{y}{g}{z} \to \dmor{x}{\compose{f}{g}}{z} \, , $$
+                              denoted like ordinary composition by $\f \mapsto \g \mapsto \compose{\f}{\g} : \dto{x}{\compose{f}{g}}{z}$, where $\f : \dto{x}{f}{y}$ and $\g : \dto{y}{g}{z}$.
+            \end{itemize}
+\end{definition}
+
+\medskip
+
+\begin{definition}
+      \label{defn:displayed-category}
+      \lean{CategoryTheory.DisplayedCat} \leanok
+      A \textbf{displayed category} $\dcatD$ over a category $\catC$ is a displayed
+      structure such that the following conditions hold:
+      \begin{itemize}
+            \item (Left unitality) $\compose{1_x}{\f} \depeq \f$ for all $x : D(I)$ and $\f : \dto{x}{f}{y}$;
+            \item (Right unitality) $\compose{\f}{1_y} \depeq \f$ for all $y : D(J)$ and $\f : \dto{x}{f}{y}$;
+            \item (Associativity) $\compose{\f}{(\compose{\g}{\h})} \depeq \compose{(\compose{\f}{\g})}{\h}$ for all $\f : \dto{x}{f}{y}$, $\g : \dto{y}{g}
+            {z}$ and $\h : \dto{z}{h}{w}$.
+      \end{itemize}
+      In above, the relations $\depeq$ are \emph{dependent} equalities, over equalities of morphisms in $\catC$. For instance, the right unit axiom $\compose{\f}{1_y} \depeq \f$ is over the ordinary right unit axiom $\compose{f}{1_b} = f$ of $\catC$.
 \end{definition}
