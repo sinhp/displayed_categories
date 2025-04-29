@@ -17,12 +17,12 @@ jobs:
       - name: Check for long lines
         if: always()
         run: |
-          ! (find Poly -name "*.lean" -type f -exec grep -E -H -n '^.{101,}$' {} \; | grep -v -E 'https?://')
+          ! (find DisplayedCategories -name "*.lean" -type f -exec grep -E -H -n '^.{101,}$' {} \; | grep -v -E 'https?://')
 
       - name: Don't 'import Mathlib', use precise imports
         if: always()
         run: |
-          ! (find Poly -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Mathlib$')
+          ! (find DisplayedCategories -name "*.lean" -type f -print0 | xargs -0 grep -E -n '^import Mathlib$')
 
   build_project:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         run: ~/.elan/bin/lake exe cache get || true
 
       - name: Build project
-        run: ~/.elan/bin/lake build Poly
+        run: ~/.elan/bin/lake build DisplayedCategories
 
       # - name: Cache mathlib docs
       #   uses: actions/cache@v3
@@ -52,7 +52,7 @@ jobs:
       #       .lake/build/doc/Std
       #       .lake/build/doc/Mathlib
       #       .lake/build/doc/declarations
-      #       !.lake/build/doc/declarations/declaration-data-Poly*
+      #       !.lake/build/doc/declarations/declaration-data-DisplayedCategories*
       #     key: MathlibDoc-${{ hashFiles('lake-manifest.json') }}
       #     restore-keys: |
       #       MathlibDoc-
