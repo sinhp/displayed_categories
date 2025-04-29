@@ -43,13 +43,13 @@ provides the structure of a cleavage for `F`. Specialized to the display categor
 
 namespace CategoryTheory
 
-open Category Opposite BasedLift Fiber Display Limits
+open Category Opposite BasedLift Fiber Displayed Limits
 
 universe u₁ v₁ u₂ v₂
 
-namespace Display
+namespace Displayed
 
-variable {C : Type u₁} [Category.{v₁} C] (F : C → Type u₂) [Display.{u₁,v₁,u₂,v₂} F]
+variable {C : Type u₁} [Category.{v₁} C] (F : C → Type u₂) [Displayed.{u₁,v₁,u₂,v₂} F]
 
 /-- A Cloven fibration structure provides for every morphism `f` and every
 object in the fiber of the codomain of `f` a specified cartesian lift of `f`. -/
@@ -84,7 +84,7 @@ class Transport where
 --notation f " ⋆ " y  : 10 => Transport.transport f y
 scoped infixr:80 " ⋆ "  => Transport.transport -- NtS: infix right ensures that `f ⋆ y ⋆ z` is parsed as `f ⋆ (y ⋆ z)`
 
-end Display
+end Displayed
 
 namespace Functor
 
@@ -92,22 +92,22 @@ variable {C : Type u₁} {E : Type u₂} [Category.{v₁} C] [Category.{v₂} E]
 
 /-- A functor `P : E ⥤ C` is a cloven fibration if the associated displayed structure of `P` is a
 cloven fibration. -/
-abbrev ClovenFibration (P : E ⥤ C) := Display.ClovenFibration (P⁻¹ .)
+abbrev ClovenFibration (P : E ⥤ C) := Displayed.ClovenFibration (P⁻¹ .)
 
 /-- A functor `P : E ⥤ C` is a fibration if the associated displayed structure of `P` is a
 fibration. -/
-abbrev Fibration (P : E ⥤ C) := Display.Fibration (P⁻¹ .)
+abbrev Fibration (P : E ⥤ C) := Displayed.Fibration (P⁻¹ .)
 
-abbrev StreetFibration (P : E ⥤ C) := Display.Fibration (P⁻¹ᵉ .)
+abbrev StreetFibration (P : E ⥤ C) := Displayed.Fibration (P⁻¹ᵉ .)
 
-abbrev DiscreteFibration (P : E ⥤ C) := Display.DiscreteFibration (P⁻¹ .)
+abbrev DiscreteFibration (P : E ⥤ C) := Displayed.DiscreteFibration (P⁻¹ .)
 
 end Functor
 
-namespace Display
+namespace Displayed
 
 variable {C : Type*} [Category C] (F : C → Type*)
-variable [Display F] [ClovenFibration F]
+variable [Displayed F] [ClovenFibration F]
 
 @[simps!]
 instance : Transport F where
@@ -118,7 +118,7 @@ def totalLift {I J : C} (f : I ⟶ J) (Y : F J) :
   (Total.mk (f ⋆ Y) : ∫ F) ⟶ (Total.mk Y : ∫ F) :=
 ⟨f, (ClovenFibration.lift f Y).homOver⟩
 
-end Display
+end Displayed
 
 namespace Functor.ClovenFibration
 
@@ -130,7 +130,7 @@ variable {P : E ⥤ C} [P.ClovenFibration]
 
 /-- A transport structure for a functor `P : E ⥤ C` consists of a transport function for the
 associated displayed structure of `P`. -/
-abbrev Transport (P : E ⥤ C) := Display.Transport (P⁻¹ .)
+abbrev Transport (P : E ⥤ C) := Displayed.Transport (P⁻¹ .)
 
 /-- A cloven fibration has transports along morphisms of the base. -/
 @[simps!]
@@ -219,7 +219,7 @@ def equivBasedLiftVertAux {I J : C} {f : I ⟶ J} {X : P⁻¹ I} {Y : P⁻¹ J} 
 @[simps!]
 def equivBasedLiftVert {I J : C} {f : I ⟶ J} {X : P⁻¹ I} {Y : P⁻¹ J} :
     (X ⟶[f] Y) ≃ (X ⟶[𝟙 I] f ⋆ Y) :=
-  Equiv.trans (Display.castEquiv (id_comp f).symm) equivBasedLiftVertAux
+  Equiv.trans (castEquiv (id_comp f).symm) equivBasedLiftVertAux
 
 -- equivFiberCatHomBasedLift
 /-- The equivalence of lifts `X ⟶[f] Y` and morphisms `X ⟶  f ⋆ Y` in the fiber category
@@ -253,7 +253,7 @@ def map {I J : C} (f : I ⟶ J) : (P⁻¹ J) ⥤ (P⁻¹ I) where
     let g₄ : (f ⋆ Y) ⟶[f] Y := basedLift f Y
     refine ⟨?_, ?_⟩
     · exact (gap g₄ g₂).hom
-    · simp only [Display.Transport.transport, over_eq', id_comp, eqToHom_trans]
+    · simp only [Transport.transport, over_eq', id_comp, eqToHom_trans]
   map_id := by
     intro X
     simp
@@ -286,13 +286,13 @@ namespace Functor.DiscreteFibration
 
 universe w
 
-open Display Fiber CategoryOfElements
+open Displayed Fiber CategoryOfElements
 
 variable {C : Type (u₁ + 1)} {E : Type (u₂ + 1)} [Category.{v₁} C] [Category.{v₂} E]
 
 variable (P : E ⥤ C) [DiscreteFibration P]
 
-abbrev Transport := Display.Transport (P⁻¹ .)
+abbrev Transport := Displayed.Transport (P⁻¹ .)
 
 /-- A discrete fibration has transports along morphisms of the base. -/
 @[simps!]

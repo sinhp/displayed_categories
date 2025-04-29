@@ -56,9 +56,9 @@ namespace CategoryTheory
 
 open Category Opposite Functor Limits Cones
 
-variable {C E : Type*} [Category C] {F : C → Type*} [Display F]
+variable {C E : Type*} [Category C] {F : C → Type*} [Displayed F]
 
-namespace Display
+namespace Displayed
 
 variable {I J : C} {f : I ⟶ J} {X : F I} {Y : F J}
 
@@ -109,7 +109,7 @@ class CoCartesian (g : X ⟶[f] Y) where
 
 namespace Cartesian
 
-open Display
+open Displayed
 
 variable (g : X ⟶[f] Y) [Cartesian g] {K : C} {Z : F K}
 
@@ -153,7 +153,7 @@ instance instComp {X : F I} {Y : F J} {Z : F K} {f₁ : I ⟶ J} {f₂ : J ⟶ K
   Cartesian (g₁ ≫ₒ g₂) where
   uniq_lift := fun I' W u g' => {
     default := ⟨gap g₁ (gap g₂ (assoc u f₁ f₂ ▸ g')), by
-      rw [← Display.cast_assoc_symm, gap_prop g₁ _ _, gap_prop g₂ _ _]
+      rw [← cast_assoc_symm, gap_prop g₁ _ _, gap_prop g₂ _ _]
       simp⟩
     uniq := by
       intro ⟨l, hl⟩
@@ -176,6 +176,6 @@ class CoCartLift (f : I ⟶ J) (src : F I) extends CoLift f src where
 
 def HasCoCartLift (f : I ⟶ J) (src : F I) := Nonempty (CoCartLift f src)
 
-end Display
+end Displayed
 
 end CategoryTheory

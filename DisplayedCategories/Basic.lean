@@ -8,7 +8,7 @@ import DisplayedCategories.Fiber
 /-!
 # Displayed category
 
-Given a type family `F : C → Type*` on a category `C` we define the type class `Display F`
+Given a type family `F : C → Type*` on a category `C` we define the type class `Displayed F`
 of displayed categories over `F`. A displayed category structure associates to each morphism `f`
 in `C`  and terms `X : F I` and `Y : F J` a type `HomOver f X Y`.
 We think of `F I` as the Fiber over `I`, and we think of `HomOver f X Y` as the type of morphisms
@@ -39,9 +39,9 @@ We also provide various useful constructors for based-lifts:
 ### Notation
 
 We provide the following notations:
-* `X ⟶[f] Y` for `DisplayStruct.HomOver f x y`
-* `f ≫ₒ g` for `DisplayStruct.comp_over f g`
-* `𝟙ₒ X` for `DisplayStruct.id_over`
+* `X ⟶[f] Y` for `DisplayedStruct.HomOver f x y`
+* `f ≫ₒ g` for `DisplayedStruct.comp_over f g`
+* `𝟙ₒ X` for `DisplayedStruct.id_over`
 
 -/
 
@@ -102,7 +102,7 @@ lemma cast_cast {I I' : C} (X : F I) {w : I = I'} {w' : I' = I} : w' ▸ w ▸ X
 
 end Fiber
 
-class DisplayStruct where
+class DisplayedStruct where
   /-- The type of morphisms indexed over morphisms of `C`. -/
   HomOver : ∀ {I J : C}, (I ⟶ J) → F I → F J → Type v₂
   /-- The identity morphism overlying the identity morphism of `C`. -/
@@ -111,11 +111,11 @@ class DisplayStruct where
   comp_over : ∀ {I J K : C} {f₁ : I ⟶ J} {f₂ : J ⟶ K} {X : F I} {Y : F J}
   {Z : F K}, HomOver f₁ X Y → HomOver f₂ Y Z → HomOver (f₁ ≫ f₂) X Z
 
-notation X " ⟶[" f "] " Y => DisplayStruct.HomOver f X Y
-notation "𝟙ₒ" => DisplayStruct.id_over
-scoped infixr:80 " ≫ₒ "  => DisplayStruct.comp_over
+notation X " ⟶[" f "] " Y => DisplayedStruct.HomOver f X Y
+notation "𝟙ₒ" => DisplayedStruct.id_over
+scoped infixr:80 " ≫ₒ "  => DisplayedStruct.comp_over
 
-class Display extends DisplayStruct F where
+class Displayed extends DisplayedStruct F where
   id_comp_cast {I J : C} {f : I ⟶ J} {X : F I} {Y : F J}
   (g : X ⟶[f] Y) : (𝟙ₒ X) ≫ₒ g = (id_comp f).symm ▸ g := by aesop_cat
   comp_id_cast {I J : C} {f : I ⟶ J} {X : F I} {Y : F J}
@@ -125,13 +125,13 @@ class Display extends DisplayStruct F where
   (g₂ : Y ⟶[f₂] Z) (g₃ : Z ⟶[f₃] W) :
   (g₁ ≫ₒ g₂) ≫ₒ g₃ = (assoc f₁ f₂ f₃).symm ▸ (g₁ ≫ₒ (g₂ ≫ₒ g₃)) := by aesop_cat
 
-attribute [simp] Display.id_comp_cast Display.comp_id_cast Display.assoc_cast
-attribute [trans] Display.assoc_cast
+attribute [simp] Displayed.id_comp_cast Displayed.comp_id_cast Displayed.assoc_cast
+attribute [trans] Displayed.assoc_cast
 
-namespace Display
+namespace Displayed
 
 variable {F}
-variable [Display F]
+variable [Displayed F]
 
 @[simp]
 def cast {I J : C} {f f' : I ⟶ J} {X : F I} {Y : F J} (w : f = f') (g : X ⟶[f] Y) :
@@ -295,7 +295,7 @@ def forget : (∫ F) ⥤ C where
 
 end Total
 
-end Display
+end Displayed
 
 variable {E : Type*} [Category E] {P : E ⥤ C}
 
@@ -395,14 +395,14 @@ end EBasedLift
 
 variable (P)
 
-/-- The display structure `DisplayStruct P` associated to a functor `P : E ⥤ C`.
+/-- The display structure `DisplayedStruct P` associated to a functor `P : E ⥤ C`.
 This instance makes the displayed notations `_ ⟶[f] _`, `_ ≫ₒ _` and `𝟙ₒ` available for based-lifts.   -/
-instance Functor.displayStruct : DisplayStruct (fun I => P⁻¹ I) where
+instance Functor.displayedStruct : DisplayedStruct (fun I => P⁻¹ I) where
   HomOver := fun f X Y => BasedLift f X Y
   id_over X := BasedLift.id X
   comp_over := fun g₁ g₂ => BasedLift.comp g₁ g₂
 
-instance Functor.isodisplay : DisplayStruct (fun I => P⁻¹ᵉ I) where
+instance Functor.isodisplay : DisplayedStruct (fun I => P⁻¹ᵉ I) where
   HomOver := fun f X Y => EBasedLift f X Y
   id_over := fun X => EBasedLift.id X
   comp_over := fun g₁ g₂ => EBasedLift.comp g₁ g₂
@@ -452,19 +452,19 @@ lemma eq_id_of_hom_eq_id {I : C} {X : P⁻¹ I} {g : X ⟶[𝟙 I] X} :
 lemma id_comp_cast {I J : C} {f : I ⟶ J} {X : P⁻¹ I} {Y : P⁻¹ J}
     {g : X ⟶[f] Y} : 𝟙ₒ X  ≫ₒ g = g.cast (id_comp f).symm := by
   ext
-  simp only [cast_hom, DisplayStruct.comp_over, DisplayStruct.id_over, comp_hom, id_hom, id_comp]
+  simp only [cast_hom, DisplayedStruct.comp_over, DisplayedStruct.id_over, comp_hom, id_hom, id_comp]
 
 @[simp]
 lemma comp_id_cast {I J : C} {f : I ⟶ J} {X : P⁻¹ I} {Y : P⁻¹ J} {g : X ⟶[f] Y} :
     g ≫ₒ 𝟙ₒ Y = g.cast (comp_id f).symm := by
   ext
-  simp only [cast_hom, DisplayStruct.comp_over, DisplayStruct.id_over, comp_hom, id_hom, comp_id]
+  simp only [cast_hom, DisplayedStruct.comp_over, DisplayedStruct.id_over, comp_hom, id_hom, comp_id]
 
 @[simp]
 lemma assoc {I J K L : C} {f : I ⟶ J} {h : J ⟶ K} {l : K ⟶ L} {W : P⁻¹ I} {X : P⁻¹ J} {Y : P⁻¹ K} {Z : P⁻¹ L}
     (g : W ⟶[f] X) (k : X ⟶[h] Y) (m : Y ⟶[l] Z) : (g ≫ₒ k) ≫ₒ m = (g ≫ₒ (k ≫ₒ m)).cast (assoc f h l).symm := by
   ext
-  simp only [cast_hom, DisplayStruct.comp_over, comp_hom, Category.assoc]
+  simp only [cast_hom, DisplayedStruct.comp_over, comp_hom, Category.assoc]
 
 def eqToHom {I : C} {X Y : P⁻¹ I} (w : X = Y) : X ⟶[𝟙 I] Y := by
   subst w
@@ -525,13 +525,13 @@ lemma eq_id_of_hom_eq_id {I : C} {X : P⁻¹ᵉ I} {g : X ⟶[𝟙 I] X} :
 lemma id_comp_cast {I J : C} {f : I ⟶ J} {X : P⁻¹ᵉ I} {Y : P⁻¹ᵉ J}
     {g : X ⟶[f] Y} : 𝟙ₒ X  ≫ₒ g = g.cast (id_comp f).symm := by
   ext
-  simp only [cast_hom, DisplayStruct.comp_over, DisplayStruct.id_over, comp_hom, id_hom, id_comp]
+  simp only [cast_hom, DisplayedStruct.comp_over, DisplayedStruct.id_over, comp_hom, id_hom, id_comp]
 
 @[simp]
 lemma comp_id_cast {I J : C} {f : I ⟶ J} {X : P⁻¹ᵉ I} {Y : P⁻¹ᵉ J} {g : X ⟶[f] Y} :
     g ≫ₒ 𝟙ₒ Y = g.cast (comp_id f).symm := by
   ext
-  simp only [cast_hom, DisplayStruct.comp_over, DisplayStruct.id_over, comp_hom, id_hom, comp_id]
+  simp only [cast_hom, DisplayedStruct.comp_over, DisplayedStruct.id_over, comp_hom, id_hom, comp_id]
 
 @[simp]
 lemma assoc {I J K L : C} {f : I ⟶ J} {h : J ⟶ K} {l : K ⟶ L}
@@ -539,25 +539,25 @@ lemma assoc {I J K L : C} {f : I ⟶ J} {h : J ⟶ K} {l : K ⟶ L}
     (g : W ⟶[f] X) (k : X ⟶[h] Y) (m : Y ⟶[l] Z) :
     (g ≫ₒ k) ≫ₒ m = (g ≫ₒ (k ≫ₒ m)).cast (assoc f h l).symm := by
   ext
-  simp only [cast_hom, DisplayStruct.comp_over, comp_hom, Category.assoc]
+  simp only [cast_hom, DisplayedStruct.comp_over, comp_hom, Category.assoc]
 
 end EBasedLift
 
 /-- The displayed category of a functor `P : E ⥤ C`. -/
-instance Functor.display : Display (fun I => P⁻¹ I) where
+instance Functor.display : Displayed (fun I => P⁻¹ I) where
   id_comp_cast := by simp
   comp_id_cast := by simp
   assoc_cast := by simp
 
-instance Functor.edisplay : Display (fun I => P⁻¹ᵉ I) where
+instance Functor.edisplay : Displayed (fun I => P⁻¹ᵉ I) where
   id_comp_cast := by simp
   comp_id_cast := by simp
   assoc_cast := by simp
 
-namespace Display
+namespace Displayed
 
 variable {F}
-variable [Display F]
+variable [Displayed F]
 
 /-- The type `Lift f tgt` of a lift of `f` with the target `tgt` consists of an object `src` in
 the Fiber of the domain of `f` and a based-lift of `f` starting at `src` and ending at `tgt`. -/
@@ -581,6 +581,6 @@ structure CoLift {I J : C} (f : I ⟶ J) (src : F I) where
   tgt : F J
   homOver : src ⟶[f] tgt
 
-end Display
+end Displayed
 
 end CategoryTheory
